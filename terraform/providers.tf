@@ -7,6 +7,13 @@ terraform {
     }
 
     required_version = ">= 1.1.0"
+
+    backend "azurerm" {
+        resource_group_name = "azure-k8s-devops-pipeline-backend-rg"
+        storage_account_name = "azurek8sdevopspipeline"
+        container_name = "tfstate"
+        key = "terraform.tfstate"
+    }
 }
 
 provider "azurerm" {
@@ -16,4 +23,3 @@ provider "azurerm" {
       }
     }
 }
-
