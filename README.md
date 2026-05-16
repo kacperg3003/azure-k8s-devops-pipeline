@@ -17,8 +17,8 @@ This project demonstrates a production-ready, cloud-native deployment process ac
 ## Project Roadmap
 - [x] **Stage 1:** Cloud Infrastructure as Code (Terraform)
 - [x] **Stage 2:** Backend Application & Containerization (FastAPI + Docker)
-- [ ] **Stage 3:** CI/CD Pipeline Automation (GitHub Actions) - *In Progress*
-- [ ] **Stage 4:** Kubernetes Deployment & GitOps Integration
+- [ ] **Stage 3:** CI Pipeline Automation (GitHub Actions) - *In Progress*
+- [ ] **Stage 4:** Kubernetes Deployment, GitOps Integration & CD Pipeline
 - [ ] **Stage 5:** Cloud Observability, Monitoring & Alerting (Prometheus & Grafana)
 
 ---
@@ -65,6 +65,13 @@ A lightweight Python backend application was created, followed by setting up the
 **Description:**
 Active development of full build and push automation. The goal is to configure a **GitHub Actions** workflow that triggers on every `git push` to the `main` branch. It will authenticate securely without persistent passwords/secrets using **OIDC (OpenID Connect)**, build a fresh Docker image, tag it. and push it automatically to the Azure Container Registry.
 
+**Planned Components & Workflow:**
+* **Pre-commit Hooks:** Configure local git hooks to automatically validate file formatting (`terraform fmt`) and perform code linting prior to allowing a commit.
+* **Infrastructure Security Scanning (Checkov):** Integrate **Checkov** as a security quality gate. The pipeline will automatically scan Terraform manifests for security misconfigurations; any critical violation will halt the build immediatelly (**Fail-Fast**).
+* **Automated CI Pipeline:** A **GitHub Actions** workflow triggered automatically on every `git push` to the `main` branch.
+* **Secure Cloud Authentication (OIDC):** Authenticate securely with Microsoft Azure using **OpenID Connect (OIDC)** and Azure Workload Identity, eliminating the need to store persistent cloud secrets or passwords in GitHub.
+* **Container Build & Publish:** Automatically build the multi-stage production Docker image, tag it with the unique Git commit SHA, and push it to the **Azure Container Registry (ACR)**.
+
 ---
 
 ### Stage 4: Kubernetes Deployment & GitOps Integration
@@ -72,6 +79,11 @@ Active development of full build and push automation. The goal is to configure a
 
 **Description:**
 This stage focuses on deploying the containerized application into the Azure Kubernetes Service (AKS) cluster. We will define Kubernetes manifests (Deployments, Services, Ingress) and transition to a modern **GitOps** approach, ensuring the cluster state automatically syncs with our Git repository.
+
+**Planned Components & Workflow:**
+* **Kubernetes Manifests:** Defining declarative YAML configurations for `Deployments` (managing pods), `Services` (internal networking), and `Ingress` (routing external HTTP traffic).
+* **Automated CD Pipeline:** Extending the GitHub Actions workflow to securely connect to the AKS cluster using OIDC after a successful image push to ACR.
+* **Zero-Downtime Rollout:** Integrating automation commands (such as `kubectl rollout restart`) within the pipeline. This triggers Kubernetes to perform a rolling update, replacing old containers with the newly built version seamlessly, without a sigle second of appication downtime.
 
 ---
 
@@ -84,4 +96,4 @@ The final stage establishes complete visibility over our cloud infrastructure an
 **Planned Components:**
 * **Prometheus:** For scraping and storing time-series metrics from both the AKS cluster and the FastAPI application.
 * **Grafana:** For building professional, interactive dashboards to monitor CPU/Memony uusage, network traffic, and HTTP request rates.
-* **Alertmanager:** To set up automated notifications (e.g., via Slack or Email) in case of high error rates of infrastructure downtime.
+* **Alert manager:** To set up automated notifications (e.g., via Slack or Email) in case of high error rates of infrastructure downtime.
