@@ -2,7 +2,7 @@ name: Application CI (Docker to ACR)
 
 on:
     push:
-        branches: [feature/stage-3-ci-automation]
+        branches: [main]
         paths:
             - 'app/**'
 
