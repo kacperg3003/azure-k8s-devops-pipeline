@@ -3,8 +3,8 @@ name: Infrastructure CI (Terraform)
 on:
     push:
         branches: [feature/stage-3-ci-automation]
-        paths:
-            - 'terraform/**'
+#        paths:
+#            - 'terraform/**'
     pull_request:
         branches:
             - 'terraform/**'
