@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  my-devops-app:
+    image: devopsprojectmyacr.azurecr.io/my-devops-app:v1
+    ports:
+      - 8000:8000
+    container_name: local-devops-api
