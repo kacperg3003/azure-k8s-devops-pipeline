@@ -4,9 +4,7 @@ on:
     push:
         branches: [feature/stage-3-ci-automation]
         paths:
-            - 'main.py'
-            - 'requirements.txt'
-            - 'Dockerfile'
+            - 'app/**'
 
 jobs:
     build-and-push:
@@ -30,5 +28,5 @@ jobs:
                 IMAGE_NAME="api-app"
                 IMAGE_TAG="${{ github.sha }}"
 
-                docker build -t $ACR_SERVER/$IMAGE_NAME:$IMAGE_TAG -t $ACR_SERVER/$IMAGE_NAME:latest .
+                docker build -t $ACR_SERVER/$IMAGE_NAME:$IMAGE_TAG -t $ACR_SERVER/$IMAGE_NAME:latest ./app
                 docker push -a $ACR_SERVER/$IMAGE_NAME
