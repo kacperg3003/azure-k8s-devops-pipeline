@@ -68,7 +68,7 @@ Active development of full build and push automation. The goal is to configure a
 ---
 
 ### Stage 4: Kubernetes Deployment & GitOps Integration
-**Status:** `Planned
+**Status:** `Planned`
 
 **Description:**
 This stage focuses on deploying the containerized application into the Azure Kubernetes Service (AKS) cluster. We will define Kubernetes manifests (Deployments, Services, Ingress) and transition to a modern **GitOps** approach, ensuring the cluster state automatically syncs with our Git repository.
