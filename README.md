@@ -17,8 +17,8 @@ This project demonstrates a production-ready, cloud-native deployment process ac
 ## Project Roadmap
 - [x] **Stage 1:** Cloud Infrastructure as Code (Terraform)
 - [x] **Stage 2:** Backend Application & Containerization (FastAPI + Docker)
-- [ ] **Stage 3:** CI Pipeline Automation (GitHub Actions) - *In Progress*
-- [ ] **Stage 4:** Kubernetes Deployment, GitOps Integration & CD Pipeline
+- [x] **Stage 3:** CI Pipeline Automation (GitHub Actions)
+- [ ] **Stage 4:** Kubernetes Deployment, GitOps Integration & CD Pipeline - *In progress*
 - [ ] **Stage 5:** Cloud Observability, Monitoring & Alerting (Prometheus & Grafana)
 
 ---
@@ -50,7 +50,7 @@ A lightweight Python backend application was created, followed by setting up the
 * **Dockerfile:** A highly optimized, multi-stage build utilizing a `python:3.11-slim` base image leveraging build layer caching.
 * **Docker Compose:** A local development environment configured to pull and run images directly from the remote Azure Container Registry to test integration.
 
-#### Hot to Run Locally (Stage 2):
+#### How to Run Locally (Stage 2):
 1. Ensure you are authenticated with your Azure CLI and have access to the ACR instance.
 2. Navigate to the project root directory and spin up the environment:
    ```bash
@@ -60,22 +60,23 @@ A lightweight Python backend application was created, followed by setting up the
 ---
 
 ### Stage 3: CI/CD Pipeline Automation
-**Status:** `In Progress`
+**Status:** `Completed`
 
 **Description:**
-Active development of full build and push automation. The goal is to configure a **GitHub Actions** workflow that triggers on every `git push` to the `main` branch. It will authenticate securely without persistent passwords/secrets using **OIDC (OpenID Connect)**, build a fresh Docker image, tag it. and push it automatically to the Azure Container Registry.
+This stage introduces a production-ready, highly optimized **decoupled dual-pipeline architecture** built from scratch. Instead of a single monolithic pipeline, the workflow is split into two specialized pipelines untlizing GitHub Actions **Path Filtering**. This ensures that cloud compute resources are saved by only running workflows relevant to the domain of the modified files.
 
-**Planned Components & Workflow:**
-* **Pre-commit Hooks:** Configure local git hooks to automatically validate file formatting (`terraform fmt`) and perform code linting prior to allowing a commit.
-* **Infrastructure Security Scanning (Checkov):** Integrate **Checkov** as a security quality gate. The pipeline will automatically scan Terraform manifests for security misconfigurations; any critical violation will halt the build immediatelly (**Fail-Fast**).
-* **Automated CI Pipeline:** A **GitHub Actions** workflow triggered automatically on every `git push` to the `main` branch.
-* **Secure Cloud Authentication (OIDC):** Authenticate securely with Microsoft Azure using **OpenID Connect (OIDC)** and Azure Workload Identity, eliminating the need to store persistent cloud secrets or passwords in GitHub.
-* **Container Build & Publish:** Automatically build the multi-stage production Docker image, tag it with the unique Git commit SHA, and push it to the **Azure Container Registry (ACR)**.
+**Implemented Components & Workflow:**
+* **Pre-commit Hooks & Local Checkov (Shift-Left Security):** COnfigured local verification mechanisms to format and validate code (`terraform fmt`) automatically before a commit is made, preventing syntax errors and exposed secrets from reaching the remote repository. Checkov can also be run locally for instant feedback.
+* **Infrastructure CI Pipeline (`terraform-ci.yml`):** Automatically triggers **exclusively** on pushes to `main` affecting the `terraform/**` directory. It runs an automated security audit of the IaC code via Checkov. It operates with `soft_fail: true` to log vulnerabilities as GitHub inline annotations without breaking the development flow at this stage.
+* **Application CI Pipeline (`app-ci.yml`):** Automatically triggers **exclusively** on pushes to `main` affecting the application directory (`app/**`). Infrastructure changes are completely ignored to minimize runner execution time.
+* **Docker Build Context & Dual-Tagging:** Optipized to respect the subfolder project layout, passing `./app` as the build context. Every image is dual-tagged with the unique Git commit SHA (`${{ github.sha }}`) for absolute traceability, along with the `latest` tag, and pushed to **Azure Container Registry (ACR)**.
+* **Secure Cloud Authentication:** Authenticates securely with Microsoft Azure using a dedicated *Service Principal* via GitHub Actions Secrets (`AZURE_CREDENTIALS` and `ACR_NAME`), eliminating hardcoded passwords.
+* **Manual UI Triggers (`workflow_dispatch`):** Enabled manual execution capability for both pipelines directly from the GitHub Actions web interface for on-demand testing and debugging.
 
 ---
 
 ### Stage 4: Kubernetes Deployment & GitOps Integration
-**Status:** `Planned`
+**Status:** `In progress`
 
 **Description:**
 This stage focuses on deploying the containerized application into the Azure Kubernetes Service (AKS) cluster. We will define Kubernetes manifests (Deployments, Services, Ingress) and transition to a modern **GitOps** approach, ensuring the cluster state automatically syncs with our Git repository.
