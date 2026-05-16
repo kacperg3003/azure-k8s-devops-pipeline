@@ -3,10 +3,10 @@ name: Application CI (Docker to ACR)
 on:
     push:
         branches: [feature/stage-3-ci-automation]
-#        paths:
-#            - 'main.py'
-#            - 'requirements.txt'
-#            - 'Dockerfile'
+        paths:
+            - 'main.py'
+            - 'requirements.txt'
+            - 'Dockerfile'
 
 jobs:
     build-and-push:
