@@ -16,3 +16,4 @@ def read_root():
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
+# Test comment to trigger app CI pipeline
