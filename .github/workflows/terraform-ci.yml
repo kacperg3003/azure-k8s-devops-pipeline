@@ -1,0 +1,25 @@
+name: Infrastructure CI (Terraform)
+
+on:
+    push:
+        branches: [feature/stage-3-ci-automation]
+        paths:
+            - 'terraform/**'
+    pull_request:
+        branches:
+            - 'terraform/**'
+
+jobs:
+    security-scan:
+        name: Checkov Security Scan
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Run Checkov (Warning Only)
+              uses: bridgecrewio/checkov-action@v12
+              with:
+                directory: ./terraform
+                framework: terraform
+                soft_fail: true

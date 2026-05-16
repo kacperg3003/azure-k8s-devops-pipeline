@@ -61,3 +61,4 @@ resource "azurerm_role_assignment" "role_assign" {
   role_definition_name = "AcrPull"
   scope                = azurerm_container_registry.acr.id
 }
+# Pipeline test CI - step 1
