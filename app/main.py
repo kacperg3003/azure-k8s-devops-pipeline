@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import os
-import socket
+import socket   # Not necesarry
 
 app = FastAPI()
 
