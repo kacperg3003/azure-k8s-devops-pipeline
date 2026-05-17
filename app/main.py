@@ -1,6 +1,5 @@
 from fastapi import FastAPI
-import os
-import socket   # Not necesarry
+import socket
 
 app = FastAPI()
 
@@ -16,4 +15,3 @@ def read_root():
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
-# Test comment to trigger app CI pipeline
