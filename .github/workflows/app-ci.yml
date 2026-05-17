@@ -26,6 +26,11 @@ jobs:
             - name: Run Ruff Linter
               run: ruff check ./app
 
+            - name: Run Unit Tests
+              run: |
+                pip install pytest httpx fastapi uvicorn
+                pytest app/
+
             - name: Login to Azure
               uses: azure/login@v2
               with:
@@ -33,6 +38,11 @@ jobs:
 
             - name: Login to Azure Container Registry (ACR)
               run: az acr login --name ${{ secrets.ACR_NAME }}
+
+            - name: Audit Python dependencies for security flaws
+              run: |
+                pip install pip-audit
+                pip-audit -r ./app/requirements.txt
 
             - name: Build and Push Docker image
               run: |
